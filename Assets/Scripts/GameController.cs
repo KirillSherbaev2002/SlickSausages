@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -24,6 +25,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private float minBallSpeed;
     public bool isSausageCollidedWithPlatform;
     [SerializeField] private float impulseMultiplayerForBall;
+
+    [Header("GameOver")]
+    public GameObject GameOverCanvas;
+    public float valueYToDie;
 
     private void OnMouseDown()
     {
@@ -77,5 +82,16 @@ public class GameController : MonoBehaviour
         mainCam.transform.position = new Vector3((SausageElements[1].transform.position.x + SausageElements[2].transform.position.x)/2, 
             mainCam.transform.position.y, mainCam.transform.position.z);
         //Cam follows the sausage
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
+        GameOverCanvas.SetActive(false);
+    }
+
+    public void LoadGameOverCanvas()
+    {
+        GameOverCanvas.SetActive(true);
     }
 }

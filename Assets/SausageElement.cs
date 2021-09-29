@@ -21,4 +21,12 @@ public class SausageElement : MonoBehaviour
             gameController.isSausageCollidedWithPlatform = false;
         }
     }
+
+    private void Update()
+    {
+        if(transform.position.y <= gameController.valueYToDie)
+        {
+            gameController.LoadGameOverCanvas();
+        }
+    }
 }
