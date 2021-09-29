@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Objects")]
     public Camera mainCam;
     public GameObject[] SausageElements;
 
+    [Header("Controllers")]
     [SerializeField] private Vector3 mousePosition;
     [SerializeField] private Vector3 differenceInTouch;
     [SerializeField] private Vector3 dragBeginPosition;
@@ -17,13 +19,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private float movingImpulseMultiplayer;
     [SerializeField] private float currentMovingImpulseValue;
 
-    public GameObject Trajectory;
-    public Image[] TrajectoryElements;
-    public Image SpriteTrajectoryMiddleElement;
-    public Image SpriteTrajectoryEndElement;
-
+    [Header("Trajectory")]
     public GameObject Ball;
     [SerializeField] private float minBallSpeed;
+    public bool isSausageCollidedWithPlatform;
+    [SerializeField] private float impulseMultiplayerForBall;
 
     private void OnMouseDown()
     {
@@ -33,38 +33,42 @@ public class GameController : MonoBehaviour
 
     private void OnMouseUp()
     {
-        dragEndPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
-
-        currentMovingImpulseValue = movingImpulse * movingImpulseMultiplayer;
-
-        if(currentMovingImpulseValue > movingImpulseMaxValue)
+        if (isSausageCollidedWithPlatform)
         {
-            currentMovingImpulseValue = movingImpulseMaxValue;
-        }
+            dragEndPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
 
-        foreach (GameObject sausageElement in SausageElements)
-        {
-            sausageElement.GetComponent<Rigidbody>().AddForce(differenceInTouch * currentMovingImpulseValue);
+            currentMovingImpulseValue = movingImpulse * movingImpulseMultiplayer;
+
+            if (currentMovingImpulseValue > movingImpulseMaxValue)
+            {
+                currentMovingImpulseValue = movingImpulseMaxValue;
+            }
+
+            foreach (GameObject sausageElement in SausageElements)
+            {
+                sausageElement.GetComponent<Rigidbody>().AddForce(differenceInTouch * currentMovingImpulseValue);
+            }
         }
     }
 
     private void OnMouseDrag()
     {
-        mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
-        //Get mousePosition
-
-        differenceInTouch = dragBeginPosition - mousePosition;
-        //Get differenceInTouch
-
-        movingImpulse = Vector3.Distance(dragBeginPosition, dragEndPosition);
-        //Get impulse needed to add to Player
-
-        print(currentMovingImpulseValue * 0.5f * Time.deltaTime);
-
-        if(currentMovingImpulseValue * 0.5f * Time.deltaTime >= minBallSpeed)
+        if (isSausageCollidedWithPlatform)
         {
-            GameObject ball = Instantiate(Ball, (SausageElements[1].transform.position + SausageElements[2].transform.position) / 2, transform.rotation);
-            ball.GetComponent<Rigidbody>().AddForce(differenceInTouch * currentMovingImpulseValue * 1f * Time.deltaTime);
+            mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0);
+            //Get mousePosition
+
+            differenceInTouch = dragBeginPosition - mousePosition;
+            //Get differenceInTouch
+
+            movingImpulse = Vector3.Distance(dragBeginPosition, dragEndPosition);
+            //Get impulse needed to add to Player
+
+            if (impulseMultiplayerForBall * currentMovingImpulseValue * Time.deltaTime >= minBallSpeed)
+            {
+                GameObject ball = Instantiate(Ball, (SausageElements[1].transform.position + SausageElements[2].transform.position) / 2, transform.rotation);
+                ball.GetComponent<Rigidbody>().AddForce(differenceInTouch * currentMovingImpulseValue * 1f * Time.deltaTime);
+            }
         }
     }
 
