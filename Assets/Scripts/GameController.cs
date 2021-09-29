@@ -26,8 +26,10 @@ public class GameController : MonoBehaviour
     public bool isSausageCollidedWithPlatform;
     [SerializeField] private float impulseMultiplayerForBall;
 
-    [Header("GameOver")]
+    [Header("Canvases")]
     public GameObject GameOverCanvas;
+    public GameObject PlayCanvas;
+    public GameObject FinishCanvas;
     public float valueYToDie;
 
     private void OnMouseDown()
@@ -82,12 +84,21 @@ public class GameController : MonoBehaviour
         mainCam.transform.position = new Vector3((SausageElements[1].transform.position.x + SausageElements[2].transform.position.x)/2, 
             mainCam.transform.position.y, mainCam.transform.position.z);
         //Cam follows the sausage
+        if(Input.touchCount > 0 && PlayCanvas.activeSelf == true)
+        {
+            PlayCanvas.SetActive(false);
+        }
     }
 
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
         GameOverCanvas.SetActive(false);
+    }
+
+    public void FinishReached()
+    {
+        FinishCanvas.SetActive(true);
     }
 
     public void LoadGameOverCanvas()

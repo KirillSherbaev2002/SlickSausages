@@ -13,6 +13,10 @@ public class SausageElement : MonoBehaviour
         {
             gameController.isSausageCollidedWithPlatform = true;
         }
+        if (collision.gameObject.CompareTag("FinishOfGame"))
+        {
+            gameController.FinishReached();
+        }
     }
     private void OnCollisionExit(Collision collision)
     {
